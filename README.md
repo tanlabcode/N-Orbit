@@ -12,7 +12,7 @@
 
 ## **Overview**
 
-![N-Orbit Schematic]("https://github.com/barbara-xiong/N-Orbit/blob/main/images/Fig1_NOrbitSchematic.png")
+![N-Orbit Schematic](https://github.com/barbara-xiong/N-Orbit/blob/main/images/Fig1_NOrbitSchematic.png)
 
 Tissue cellular neighborhoods (TCNs) are spatially contiguous regions of homogeneous and distinct cell type composition. Formation of TCNs may be indicative of various cell types coordinating to form functional niches. Studying spatial relationships on the level of TCNs may allow for identification of localized patterns that may otherwise be diluted and overlooked when analyzing in bulk.
 
