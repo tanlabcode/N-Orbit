@@ -9,17 +9,22 @@ import sys
 import os
 from scipy.optimize import linear_sum_assignment
 
+''' This script calculates neighborhood distances for all neighborhoods specified in UNIT to all neighborhoods in the dataset that precede it alphabetically.
+'''
+
 # If UNIT is image, use UNIT_MODE = "Image". If UNIT is neighborhood, use UNIT_MODE = "Neighborhood"
 # To run all images in a single job, use UNIT_MODE = "All" (slow)
 UNIT = sys.argv[1]
-UNIT_MODE = "Image"
+UNIT_MODE = "Neighborhood"
 
-# Path to intermediates
+# Path to intermediates (same as Step1)
 intermediate_path = "/path/to/intermediates/SyntheticV1/"
 
+# Read N-Orbits from Step1 and gather list of all neighborhoods/units in dataset
 df = pd.read_csv(intermediate_path + "norbits.csv")
 neighborhood_list = sorted(set(df["unit"]))
 
+# Filter neighborhood list to that specified in command line for parallel processing.
 if UNIT_MODE == "Image":
 	unit_neighborhoods = [item for item in neighborhood_list if item.startswith(UNIT)]
 elif UNIT_MODE == "Neighborhood":
@@ -34,6 +39,11 @@ if not os.path.exists(intermediate_path+"dists/"):
 print(unit_neighborhoods)
 
 def neighborhood_distance(df1_vectors, df2_vectors):
+    '''Get neighborhood distance between a pair of neighborhoods.
+    df1_vectors: Pandas DataFrame of sampled N-Orbit vectors for Neighborhood 1
+    df2_vectors: Pandas DataFrame of sampled N-Orbit vectors for Neighborhood 2
+    Output: Pairwise distance between Neighborhood 1 and 2, positions for linear sum assignment (not used)
+    '''
     distance_mat = distance_matrix(df1_vectors, df2_vectors, p = 1)
     distance_mat_orig = np.copy(distance_mat)
     row_ind, column_ind = linear_sum_assignment(distance_mat)
@@ -47,11 +57,13 @@ def main():
     
     n_vectors = {}
     print("Starting vector writing.")
+    # Get NumPy formulation of N-Orbit vectors for all neighborhoods.
     for i in neighborhood_list:
             df1_vectors = pd.read_csv(intermediate_path + "sampled_vectors/"+i+".csv").set_index("Unnamed: 0")
             n_vectors[i] = df1_vectors.values
     print("Finished vector writing.")
     
+    # For all specified neighborhoods in this job, calculate neighborhood distances to all neighborhoods in the dataset that come before it alphabetically.
     for i in unit_neighborhoods:
         unit_dists[i] = np.zeros((len(neighborhood_list)))
         print(i)
@@ -61,7 +73,8 @@ def main():
                 unit_dists[i][j] = dist
             else:
                 break
-        
+                
+    # Save columns of distance matrix for neighborhoods specified for this job
     unit_dists = pd.DataFrame(unit_dists)
     unit_dists.to_csv(intermediate_path+"dists/" + UNIT+"_ndists.csv")
 

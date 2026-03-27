@@ -2,9 +2,10 @@ import pandas as pd
 import glob
 import numpy as np
 
-# Input paths and column name settings
-input_file_path = "/path/to/data/synthetic_mrf_neighborhoods_v1.csv"
-intermediate_path = "/path/to/intermediates/SyntheticV1/"
+''' This script compiles the neighborhood distance columns generated in Step 1a into the full neigborhood distace matrix.'''
+# Input paths and column name settings (same as Step 1)
+input_file_path = "../data/synthetic_mrf_neighborhoods_v1.csv"
+intermediate_path = "../intermediates/SyntheticV1/"
 im_label = "Image"
 neighborhood_label = "Neighborhood"
 

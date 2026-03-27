@@ -68,7 +68,7 @@ By default, the N-Orbit distance pipeline is intended for neighborhood-level use
 
 **Prepare input data**
 
-To prepare the input data, compile a CSV table where each row represents a cell and columns are provided for **(1) x coordinates, (2) y coordinates, (3) cell type labels, (4) sample/image labels, and (5) neighborhood labels**. Column names are flexible and specified in Step1 below. Synthetic data examples are provided under the directory examples/synthetic_mrf_neighborhoods_v1.csv and examples/synthetic_mrf_neighborhoods_v2.csv.
+To prepare the input data, compile a CSV table where each row represents a cell and columns are provided for **(1) x coordinates, (2) y coordinates, (3) cell type labels, (4) sample/image labels, and (5) neighborhood/TCN labels**. Column names are flexible and specified in Step1 below. Synthetic data examples are provided under the directory examples/synthetic_mrf_neighborhoods_v1.csv and examples/synthetic_mrf_neighborhoods_v2.csv.
 
 *For calculating sample-level distances, use a column of a constant values (e.g. all zeros) for the neighborhood label column.*
 
@@ -85,7 +85,7 @@ This step generates a compiled CSV called "norbits.csv" of all N-Orbits in the d
 ```bash
 conda activate NOrbit
 cd NOrbitDistance
-python Step1a_N-Orbit-Enumerate.py     # replace Image1 with your image name
+python Step1_N-Orbit-Enumerate.py     # replace Image1 with your image name
 ```
 
 **Hyperparameters**
@@ -117,6 +117,17 @@ python Step1a_N-Orbit-Enumerate.py     # replace Image1 with your image name
 * sample_size: The number of bootstrapped N-Orbits used to represent each neighborhood (recommended at least 1000)
 
 *For calculating sample-level distances, specify the neighborhood_label to the column of constant values, as mentioned in Preparing Inputs.*
+
+**Output Files**
+
+* norbits.csv: CSV of all N-Orbit vectors in dataset. Column labels are N-Orbit vector indices (0 through 2 x # of cell types - 1) and unit label (e.g. Image_Neighborhood).
+The first half of indices correspond to the nucleus encoding (and map to cell types in alphabetical order), and the second half corresponds to the orbit encoding (also alphabetical).
+
+* sampled_vectors: Folder of CSVs for sampled vectors of each unit. Column labels are N-Orbit vector indices.
+
+* instance_metadata.csv (Instance Mode only): CSV with spatial coordinates and types for all cells, with an updated "unit" column for instance assignments.
+
+* Step1_RunTime.txt: Stored runtime of Step 1.
 
 This step takes about 20-30 minutes on the provided 100-sample synthetic dataset without parallelization.
 
@@ -156,6 +167,12 @@ python Step2a_Neighborhood-Distances.py all
 
 This step takes a few hours on the provided 300-neighborhood synthetic dataset using bootstrap sample size 1000 and without parallelization. Runtime scales roughly cubically with N-Orbit bootstrap sample size and quadratically with neighborhood count. Parallelization is recommended for a substantially greater number of neighborhoods (1000+) and/or larger N-Orbit bootstrap sample sizes.
 
+**Output Files**
+
+* dists: Folder of CSVs containing column subsets of the neighborhood distance matrix for all neighborhoods specified in the command line argument, which are stored in column labels.
+
+* RunTimeLogs: Folder of text files containing runtimes (in seconds) for each call of Step2.
+
 **Step 2b: Compile individual distance calculation runs into a single distance matrix**
 
 This step creates a CSV of the compiled neighborhood distance matrix from the individual CSVs in the neighborhood_dists folder. This step needs to be run regardless of UNIT_MODE used in Step2a.
@@ -166,13 +183,17 @@ python Step2b_Compile-Distance-Matrices.py
 
 **Hyperparameters**
 
-* input_file_path: The file path to the original input file, as in Step1a.
+* input_file_path: The file path to the original input file, as in Step1.
 
 * intermediate_path: The folder path where intermediates are stored, as earlier.
 
-* im_label: The name of the image label column, as in Step1a.
+* im_label: The name of the image label column, as in Step1.
 
-* neighborhood_label: The name of the neighborhood label column, as in Step1a.
+* neighborhood_label: The name of the neighborhood label column, as in Step1.
+
+**Outputs**
+
+* neighborhood_distance_matrix.csv: Final neighborhood distance matrix with columns and row labels for each unit (e.g. Image_Neigborhood).
 
 ### **N-Orbit Enrichment**
 
@@ -211,6 +232,13 @@ python n-orbit-enrichment.py 1  # example for Run 1
 
 * numCellTypes: The number of unique cell types in your dataset. It should be half the length of each N-Orbit vector.
 
+* threshold: The threshold for binarization of N-Orbit vectors. Default is 0.2 which corresponds to 50 microns.
+
+**Outputs**
+A folder with the name specified in output_path with CSVs containing p and adjusted p values for each binarized vector in the set of interest.
+Numerical column labels correspond to indices of the N-Orbit vector. 
+Note that the "q value" column is the FDR-corrected p values for this particular run. They will be recalculated in the compile script for multiple runs.
+
 **Compiling bootstrap permutation tests across multiple runs**
 
 After completing all runs, the following command will compile records from trials_path into final enrichment results.
@@ -221,13 +249,18 @@ python compile.py
 
 **Hyperparameters**
 
-* input_file_path: The path to your original input files for calculating N-Orbit distance, as in Step1a.
+* input_file_path: The path to your original input files for calculating N-Orbit distance, as in Step1.
 
 * trials_path: The folder path where results are stored for each set of trials for this neighborhood cluster, as earlier.
 
-* cell_type_label: The name of the column for cell type labels, as in Step1a.
+* cell_type_label: The name of the column for cell type labels, as in Step1.
 
 * output_path: The file path where the final enrichment results will be stored.
+
+**Outputs**
+
+* n-orbit-enrichment-results.csv: A CSV of compiled enrichment results. Numerical column indices correspond to binarized N-Orbit vector indices.
+The "q values" column corresponds to FDR-corrected p values calculated from the "p values" column.
 
 ## Maintainers
 

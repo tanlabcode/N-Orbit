@@ -43,4 +43,4 @@ tcn_vectors_df = tcn_vectors_df.sort_values("pvalue")
 tcn_vectors_df['qvalue'] = stats.false_discovery_control(tcn_vectors_df['pvalue'], method='bh')
 
 # Save the results to a CSV file
-tcn_vectors_df.to_csv(output_path + "NOrbit_Enrichment_Run_"+str(run)+".csv")
+tcn_vectors_df.reset_index(drop=True).to_csv(output_path + "NOrbit_Enrichment_Run_"+str(run)+".csv")

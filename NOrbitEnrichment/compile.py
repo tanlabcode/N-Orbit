@@ -5,10 +5,10 @@ from collections import Counter
 from scipy import stats
 
 # Set paths and column labels
-trial_path = "/path/to/trials/"
-input_file_path = "/path/to/data/synthetic_mrf_neighborhoods_v1.csv"
+trial_path = "../trials/"
+input_file_path = "../data/synthetic_mrf_neighborhoods_v1.csv"
 cell_type_label = "Cell_Type"
-output_path = "/path/to/output/"
+output_path = "../to/output/"
 
 # Compile trials into single dataframe
 dfs = []
