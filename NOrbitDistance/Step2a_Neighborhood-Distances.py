@@ -15,7 +15,7 @@ from scipy.optimize import linear_sum_assignment
 # If UNIT is image, use UNIT_MODE = "Image". If UNIT is neighborhood, use UNIT_MODE = "Neighborhood"
 # To run all images in a single job, use UNIT_MODE = "All" (slow)
 UNIT = sys.argv[1]
-UNIT_MODE = "Neighborhood"
+UNIT_MODE = "All"
 
 # Path to intermediates (same as Step1)
 intermediate_path = "intermediates/SyntheticV1/"
