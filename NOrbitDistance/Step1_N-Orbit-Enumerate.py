@@ -14,8 +14,8 @@ It generates a compiled CSV called "norbits.csv" of all N-Orbits in the dataset.
 '''
 
 ### INPUTS AND PARAMETERS
-input_file_path = "../data/synthetic_mrf_neighborhoods_v1.csv"
-intermediate_path = "../intermediates/SyntheticV1/"
+input_file_path = "/data/synthetic_mrf_neighborhoods_v1.csv"
+intermediate_path = "/intermediates/SyntheticV1/"
 MODE = "Neighborhood"
 
 # Maximum radius for distance measurement between cells (in microns)
