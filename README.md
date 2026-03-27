@@ -118,7 +118,7 @@ python Step1_N-Orbit-Enumerate.py     # replace Image1 with your image name
 
 *For calculating sample-level distances, specify the neighborhood_label to the column of constant values, as mentioned in Preparing Inputs.*
 
-**Output Files**
+**Outputs**
 
 * norbits.csv: CSV of all N-Orbit vectors in dataset. Column labels are N-Orbit vector indices (0 through 2 x # of cell types - 1) and unit label (e.g. Image_Neighborhood).
 The first half of indices correspond to the nucleus encoding (and map to cell types in alphabetical order), and the second half corresponds to the orbit encoding (also alphabetical).
@@ -167,7 +167,7 @@ python Step2a_Neighborhood-Distances.py all
 
 This step takes a few hours on the provided 300-neighborhood synthetic dataset using bootstrap sample size 1000 and without parallelization. Runtime scales roughly cubically with N-Orbit bootstrap sample size and quadratically with neighborhood count. Parallelization is recommended for a substantially greater number of neighborhoods (1000+) and/or larger N-Orbit bootstrap sample sizes.
 
-**Output Files**
+**Outputs**
 
 * dists: Folder of CSVs containing column subsets of the neighborhood distance matrix for all neighborhoods specified in the command line argument, which are stored in column labels.
 
