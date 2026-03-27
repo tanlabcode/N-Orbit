@@ -18,7 +18,7 @@ UNIT = sys.argv[1]
 UNIT_MODE = "Neighborhood"
 
 # Path to intermediates (same as Step1)
-intermediate_path = "/intermediates/SyntheticV1/"
+intermediate_path = "intermediates/SyntheticV1/"
 
 # Read N-Orbits from Step1 and gather list of all neighborhoods/units in dataset
 df = pd.read_csv(intermediate_path + "norbits.csv")
