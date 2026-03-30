@@ -129,7 +129,7 @@ The first half of indices correspond to the nucleus encoding (and map to cell ty
 
 * Step1_RunTime.txt: Stored runtime of Step 1.
 
-This step takes about 20-30 minutes on the provided 100-sample synthetic dataset without parallelization.
+This step takes about 5-10 minutes on the provided 100-sample synthetic dataset without parallelization.
 
 **Hyperparameters**
 
@@ -212,7 +212,7 @@ python setup.py build_ext --inplace
 
 **Preparing inputs**
 
-To prepare inputs for the neighborhoods of interest, compile the corresponding CSVs in the neighborhood_vectors folder into a single CSV with an additional column annotating which image and neighborhood each vector initially came from. An example is provided in "examples/NR_cluster.csv".
+To prepare inputs for the neighborhoods of interest, compile the corresponding CSVs in the neighborhood_vectors folder into a single CSV with an additional column annotating which image and neighborhood each vector initially came from. An example is provided in "examples_analysis/NSCLC-D-cluster-0.csv".
 
 **Calculating N-Orbit Enrichment**
 
